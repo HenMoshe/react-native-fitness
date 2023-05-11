@@ -64,17 +64,17 @@ public class Manager implements ActivityEventListener {
 
     private Promise promise;
 
-    private static boolean isGooglePlayServicesAvailable(final Activity activity) {
+  private static boolean isGooglePlayServicesAvailable(final Context context) {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int status = googleApiAvailability.isGooglePlayServicesAvailable(activity);
-        if(status != ConnectionResult.SUCCESS) {
-            if(googleApiAvailability.isUserResolvableError(status)) {
-                googleApiAvailability.getErrorDialog(activity, status, GOOGLE_PLAY_SERVICE_ERROR_DIALOG).show();
+        int status = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        if (status != ConnectionResult.SUCCESS) {
+            if (googleApiAvailability.isUserResolvableError(status) && context instanceof Activity) {
+                googleApiAvailability.getErrorDialog((Activity) context, status, GOOGLE_PLAY_SERVICE_ERROR_DIALOG).show();
             }
             return false;
         }
-        return true;
-    }
+    return true;
+}
 
     private static TimeUnit getInterval(String customInterval) {
         if(customInterval.equals("minute")) {
@@ -117,11 +117,11 @@ public class Manager implements ActivityEventListener {
         return fitnessOptions;
     }
 
-    public boolean isAuthorized(final Activity activity, final ArrayList<Request> permissions){
-        if(isGooglePlayServicesAvailable(activity)) {
+    public boolean isAuthorized(final Context context, final ArrayList<Request> permissions){
+        if(isGooglePlayServicesAvailable(context)) {
             final FitnessOptions fitnessOptions = addPermissionToFitnessOptions(FitnessOptions.builder(), permissions)
                     .build();
-            return GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(activity), fitnessOptions);
+            return GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(context), fitnessOptions);
         }
         return false;
     }
