@@ -1,6 +1,7 @@
 package com.ovalmoney.fitness;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -91,7 +92,8 @@ public class RNFitnessModule extends ReactContextBaseJavaModule{
 
   @ReactMethod
   public void isAuthorized(ReadableArray permissions, Promise promise){
-    promise.resolve(manager.isAuthorized(getCurrentActivity(), createRequestFromReactArray(permissions)));
+    final Context context = getCurrentActivity() != null ? getCurrentActivity() : getReactApplicationContext();
+    promise.resolve(manager.isAuthorized(context, createRequestFromReactArray(permissions)));
   }
 
   @ReactMethod
