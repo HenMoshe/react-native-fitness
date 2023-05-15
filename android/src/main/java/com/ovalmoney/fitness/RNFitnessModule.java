@@ -138,8 +138,9 @@ public class RNFitnessModule extends ReactContextBaseJavaModule{
 
   @ReactMethod
   public void getSteps(double startDate, double endDate, String interval, Promise promise){
+    final Context context = getCurrentActivity() != null ? getCurrentActivity() : getReactApplicationContext();
     try {
-      manager.getSteps(getCurrentActivity(), startDate, endDate, interval, promise);
+      manager.getSteps(context, startDate, endDate, interval, promise);
     }catch(Error e){
       promise.reject(e);
     }
